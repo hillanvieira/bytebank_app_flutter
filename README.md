@@ -1,16 +1,17 @@
 # bytebank_app
 
-A new Flutter project.
+A Flutter project.
 
-## Getting Started
+Projeto que simula uma interface básica de um App para transferências bancárias ,
+projeto utiliza persistência de dados com o uso da lib sqflite do flutter e
+também implementa o uso de uma API REST e comunicação HTTP.
 
-This project is a starting point for a Flutter application.
+Além de todos os benefícios para criar rapidamente uma interface de usuário que o flutter framework oferece.
 
-A few resources to get you started if this is your first Flutter project:
+Aplicação focada em utilizar as vantagens de uma linguagem orientada a objetos.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Muitas implementações de tarefas assíncronas.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+projeto organizado num pattern bem interessante para desenvolvimento em flutter.
+
+Esse app é uma proposta da Alura junto a NuBank para a criação de um curso, mas aqui eu dei meus toques e adicionei novas features que eu acho interessante e muita coisa eu vou transformar em uma biblioteca para acelerar ainda mais o desenvolvimento de aplicações multiplataformas utilizando o flutter.
