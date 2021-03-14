@@ -2,6 +2,7 @@ import 'package:bytebank_app/components/centered_message.dart';
 import 'package:bytebank_app/components/connection_error.dart';
 import 'package:bytebank_app/components/progress_bar.dart';
 import 'package:bytebank_app/http/webclient.dart';
+import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/transaction.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class TransactionsList extends StatefulWidget {
 
 class _TransactionsListState extends State<TransactionsList> {
   List<Transaction> transactions = [];
+  final TransactionWebClient _webClient = new TransactionWebClient();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class _TransactionsListState extends State<TransactionsList> {
       ),
       body: FutureBuilder<List<Transaction>>(
         initialData: [],
-        future: findAllHttp().then((transactionsJson) {
+        future: _webClient.findAllHttp().then((transactionsJson) {
           return transactionsJson;
         }),
         builder: (context, snapshot) {

@@ -1,7 +1,3 @@
-import 'package:bytebank_app/components/connection_error.dart';
-import 'package:bytebank_app/http/webclient.dart';
-import 'package:bytebank_app/models/contact.dart';
-import 'package:bytebank_app/models/transaction.dart';
 import 'package:bytebank_app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
