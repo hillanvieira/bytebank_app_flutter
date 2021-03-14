@@ -1,6 +1,6 @@
 import 'package:bytebank_app/components/centered_message.dart';
 import 'package:bytebank_app/components/connection_error.dart';
-import 'package:bytebank_app/components/progress_bar.dart';
+import 'package:bytebank_app/components/loading_centered_message.dart';
 import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/transaction.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +12,10 @@ class TransactionsList extends StatefulWidget {
 
 class _TransactionsListState extends State<TransactionsList> {
   List<Transaction> transactions = [];
-  final TransactionWebClient _webClient = new TransactionWebClient();
 
   @override
   Widget build(BuildContext context) {
+    final TransactionWebClient _webClient = new TransactionWebClient();
 
     //Function that update screen when Scroll at end of the list.
     _onEndScrollAtBorders({ScrollMetrics metrics, DragEndDetails dragDetails}) {
@@ -41,7 +41,7 @@ class _TransactionsListState extends State<TransactionsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Progress(
+              return LoadingCenteredMessage(
                 message: 'Loading transaction list',
               );
               break;
@@ -63,7 +63,6 @@ class _TransactionsListState extends State<TransactionsList> {
               }
 
               return NotificationListener<ScrollNotification>(
-
                 onNotification: (scrollNotification) {
                   if (scrollNotification is ScrollEndNotification) {
                     _onEndScrollAtBorders(
@@ -71,7 +70,6 @@ class _TransactionsListState extends State<TransactionsList> {
                       dragDetails: scrollNotification.dragDetails,
                     );
                   }
-
                   return false;
                 },
                 child: ListView.builder(

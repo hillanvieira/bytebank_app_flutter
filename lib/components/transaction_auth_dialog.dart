@@ -1,17 +1,16 @@
-import 'package:bytebank_app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class TransactionAuthDialog extends StatefulWidget {
   final Function(String password) onConfirm;
 
-  const TransactionAuthDialog({Key key,@required this.onConfirm}) : super(key: key);
+  const TransactionAuthDialog({Key key, @required this.onConfirm})
+      : super(key: key);
 
   @override
   _TransactionAuthDialogState createState() => _TransactionAuthDialogState();
 }
 
 class _TransactionAuthDialogState extends State<TransactionAuthDialog> {
-
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -21,8 +20,7 @@ class _TransactionAuthDialogState extends State<TransactionAuthDialog> {
       content: TextField(
         controller: _passwordController,
         decoration: InputDecoration(
-          border: OutlineInputBorder(borderSide: BorderSide())
-        ),
+            border: OutlineInputBorder(borderSide: BorderSide())),
         textAlign: TextAlign.center,
         obscureText: true,
         maxLength: 4,
@@ -39,7 +37,8 @@ class _TransactionAuthDialogState extends State<TransactionAuthDialog> {
             widget.onConfirm(_passwordController.text);
             Navigator.pop(context);
           },
-        ),TextButton(
+        ),
+        TextButton(
           child: Text('Cancel'),
           onPressed: () {
             Navigator.pop(context);

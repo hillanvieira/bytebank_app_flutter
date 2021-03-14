@@ -1,4 +1,4 @@
-import 'package:bytebank_app/components/progress_bar.dart';
+import 'package:bytebank_app/components/loading_centered_message.dart';
 import 'package:bytebank_app/database/dao/contact_dao.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/screens/contact_form.dart';
@@ -28,8 +28,8 @@ class _ContactsListState extends State<ContactsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Progress();
-              break;
+              return LoadingCenteredMessage();
+
             case ConnectionState.active:
               break;
             case ConnectionState.done:
@@ -51,7 +51,6 @@ class _ContactsListState extends State<ContactsList> {
                   );
                 },
               );
-              break;
           }
 
           return Text("Unknown error");
@@ -86,9 +85,9 @@ class _ContactItem extends StatelessWidget {
 
   _ContactItem({
     Key key,
-    this.contact,
-    this.updateState,
-    @required this.onClick,
+     this.contact,
+     this.updateState,
+     this.onClick,
   }) : super(key: key);
 
   @override

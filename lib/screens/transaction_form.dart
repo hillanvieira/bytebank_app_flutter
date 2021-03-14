@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:bytebank_app/components/response_dialog.dart';
 import 'package:bytebank_app/components/transaction_auth_dialog.dart';
 import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/contact.dart';
@@ -65,18 +68,48 @@ class _TransactionFormState extends State<TransactionForm> {
                           double.tryParse(_valueController.text);
                       final transactionCreated =
                           Transaction(value, widget.contact);
-                      showDialog(context: context, builder: (context){
-                        return TransactionAuthDialog(onConfirm: (String password){
-                          _webClient.saveHttp(transactionCreated, password).then((transaction) {
-                            if (transaction != null) {
-                              Navigator.pop(context);
-                            }
+                      showDialog(
+                          context: context,
+                          builder: (contextDialog) {
+                            return TransactionAuthDialog(
+                              onConfirm: (String password) async {
+
+
+
+                                final transaction = await _webClient
+                                    .saveHttp(transactionCreated, password)
+                                    .catchError((e){
+                                  showDialog(
+                                      context: context,
+                                      builder: (contextDialog) {
+                                        return FailureDialog('Timeout submitting the  transaction');
+                                      });
+                                },test: (e) => e is TimeoutException).catchError((e) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (contextDialog) {
+                                        return FailureDialog(e.message);
+                                      });
+                                }, test: (e) => e is HttpException).catchError((e) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (contextDialog) {
+                                        return FailureDialog('${e.message} Contact support unknown error');
+                                      });
+                                }, test: (e) => e is Exception);
+
+                                if (transaction != null) {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (contextDialog) {
+                                        return SuccessDialog(
+                                            'Successful transaction');
+                                      });
+                                  Navigator.pop(context);
+                                }
+                              },
+                            );
                           });
-                        },);
-
-                      });
-
-
                     },
                   ),
                 ),

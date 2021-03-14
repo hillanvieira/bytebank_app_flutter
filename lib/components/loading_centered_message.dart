@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Progress extends StatelessWidget {
+class LoadingCenteredMessage extends StatelessWidget {
 
   final String message;
 
-  const Progress({Key key, this.message = 'Loading'}) : super(key: key);
+
+
+ const LoadingCenteredMessage({Key key, this.message = 'Loading'}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

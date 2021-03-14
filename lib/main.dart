@@ -1,7 +1,6 @@
+import 'package:bytebank_app/components/response_dialog.dart';
 import 'package:bytebank_app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
-
-import 'components/transaction_auth_dialog.dart';
 
 void main() {
   runApp(BytebankApp());
@@ -33,3 +32,4 @@ class BytebankApp extends StatelessWidget {
     );
   }
 }
+
