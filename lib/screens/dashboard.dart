@@ -1,6 +1,4 @@
-import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/screens/contacts_list.dart';
-import 'package:bytebank_app/screens/transaction_form.dart';
 import 'package:bytebank_app/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
