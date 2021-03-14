@@ -4,13 +4,13 @@ import 'package:bytebank_app/models/transaction.dart';
 import '../webclient.dart';
 
 class TransactionWebClient {
-  Future<Transaction> saveHttp(Transaction transaction) async {
+  Future<Transaction> saveHttp(Transaction transaction, String password) async {
     final String transactionJson = jsonEncode(transaction.toJson());
     jsonEncode(transactionJson);
 
     final Response response = await client.post(
       Uri.parse(url),
-      headers: {'Content-type': 'application/json', 'password': '1000'},
+      headers: {'Content-type': 'application/json', 'password': password},
       body: transactionJson,
     );
 
