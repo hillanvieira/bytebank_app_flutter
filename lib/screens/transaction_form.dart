@@ -73,40 +73,8 @@ class _TransactionFormState extends State<TransactionForm> {
                           builder: (contextDialog) {
                             return TransactionAuthDialog(
                               onConfirm: (String password) async {
-
-
-
-                                final transaction = await _webClient
-                                    .saveHttp(transactionCreated, password)
-                                    .catchError((e){
-                                  showDialog(
-                                      context: context,
-                                      builder: (contextDialog) {
-                                        return FailureDialog('Timeout submitting the  transaction');
-                                      });
-                                },test: (e) => e is TimeoutException).catchError((e) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (contextDialog) {
-                                        return FailureDialog(e.message);
-                                      });
-                                }, test: (e) => e is HttpException).catchError((e) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (contextDialog) {
-                                        return FailureDialog('${e.message} Contact support unknown error');
-                                      });
-                                }, test: (e) => e is Exception);
-
-                                if (transaction != null) {
-                                  await showDialog(
-                                      context: context,
-                                      builder: (contextDialog) {
-                                        return SuccessDialog(
-                                            'Successful transaction');
-                                      });
-                                  Navigator.pop(context);
-                                }
+                                await _send(
+                                    transactionCreated, password, context);
                               },
                             );
                           });
@@ -119,5 +87,55 @@ class _TransactionFormState extends State<TransactionForm> {
         ),
       ),
     );
+  }
+
+  Future _send(Transaction transactionCreated, String password,
+      BuildContext context) async {
+    /* Future.delayed(Duration(microseconds: 1)).then((value){
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+
+            return LoadingDialog();
+          });
+    });*/
+    final transaction = _webClient.saveHttp(transactionCreated, password);
+
+    await transaction.catchError((e) {
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return FailureDialog('Timeout submitting the  transaction');
+          });
+    }, test: (e) => e is TimeoutException).catchError((e) {
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return FailureDialog(e.message);
+          });
+    }, test: (e) => e is HttpException).catchError((e) {
+      showDialog(
+          context: context,
+          builder: (contextDialog) {
+            return FailureDialog('${e.message} Contact support unknown error');
+          });
+    }, test: (e) => e is Exception).then((value) async {
+      if (value != null) {
+        await showDialog(
+            context: context,
+            builder: (contextDialog) {
+              return SuccessDialog('Successful transaction');
+            });
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  Future runIt(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (contextDialog) {
+          return SuccessDialog('Successful transaction');
+        });
   }
 }

@@ -63,14 +63,18 @@ class ResponseDialog extends StatelessWidget {
   }
 }
 
-class LoadingDialog extends StatelessWidget {
- final Widget widgetCaller;
+class LoadingDialog extends StatefulWidget {
 
-  const LoadingDialog({Key key, this.widgetCaller}) : super(key: key);
+  @override
+  _LoadingDialogState createState() => _LoadingDialogState();
+}
+
+class _LoadingDialogState extends State<LoadingDialog> {
 
 
   @override
   Widget build(BuildContext context) {
+
     return AlertDialog(
       title: Text('Loading..'),
       content: Column(
