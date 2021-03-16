@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:bytebank_app/components/loading_centered_message.dart';
 import 'package:bytebank_app/components/response_dialog.dart';
 import 'package:bytebank_app/components/transaction_auth_dialog.dart';
 import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -19,9 +21,13 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = new TransactionWebClient();
+  final String transactionId = Uuid().v4();
+  bool _sending = false;
 
   @override
   Widget build(BuildContext context) {
+    print("transaction form ID: $transactionId");
+
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -32,6 +38,15 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Visibility(
+                visible: _sending,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: LoadingCenteredMessage(
+                    message: 'Sending...',
+                  ),
+                ),
+              ),
               Text(
                 widget.contact.name,
                 style: TextStyle(
@@ -67,7 +82,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       final double value =
                           double.tryParse(_valueController.text);
                       final transactionCreated =
-                          Transaction(value, widget.contact);
+                          Transaction(transactionId, value, widget.contact);
                       showDialog(
                           context: context,
                           builder: (contextDialog) {
@@ -99,6 +114,11 @@ class _TransactionFormState extends State<TransactionForm> {
             return LoadingDialog();
           });
     });*/
+
+    setState(() {
+      _sending = true;
+    });
+
     final transaction = _webClient.saveHttp(transactionCreated, password);
 
     await transaction.catchError((e) {
@@ -121,13 +141,22 @@ class _TransactionFormState extends State<TransactionForm> {
           });
     }, test: (e) => e is Exception).then((value) async {
       if (value != null) {
+        setState(() {
+          _sending = false;
+        });
+
         await showDialog(
             context: context,
             builder: (contextDialog) {
               return SuccessDialog('Successful transaction');
             });
+
         Navigator.pop(context);
       }
+    });
+
+    setState(() {
+      _sending = false;
     });
   }
 

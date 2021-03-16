@@ -32,9 +32,12 @@ class TransactionWebClient {
       case 400:
         throw HttpException('there was an error submitting transaction');
 
+      case 409:
+       throw HttpException('transaction always exists');
+
       default:
         throw HttpException(
-            'there was an unknown error submitting transaction');
+            'there was an unknown error while submitting transaction');
     }
   }
 

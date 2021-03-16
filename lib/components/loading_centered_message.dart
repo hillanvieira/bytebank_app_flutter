@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LoadingCenteredMessage extends StatelessWidget {
-
   final String message;
 
-
-
- const LoadingCenteredMessage({Key key, this.message = 'Loading'}) : super(key: key);
+  const LoadingCenteredMessage({Key key, this.message = 'Loading'})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +14,23 @@ class LoadingCenteredMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: CircularProgressIndicator(
               strokeWidth: 6.0,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
             ),
           ),
-          Text(message),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              message,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
     );

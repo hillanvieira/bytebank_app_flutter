@@ -1,9 +1,10 @@
-import 'package:bytebank_app/components/response_dialog.dart';
 import 'package:bytebank_app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(BytebankApp());
+  //print(Uuid().v4());
   //saveHttp(Transaction(235.98, Contact(0, 'Arnaldo', 2300)))
   //    .then((transaction) => print('test post http $transaction'));
 }
