@@ -1,6 +1,7 @@
+import 'package:bytebank_app/components/theme.dart';
 import 'package:bytebank_app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(BytebankApp());
@@ -9,28 +10,23 @@ void main() {
   //    .then((transaction) => print('test post http $transaction'));
 }
 
+class LogObserver extends BlocObserver{
+  @override
+  void onChange(BlocBase bloc, Change change) {
+print('${bloc.runtimeType} > $change');
+    super.onChange(bloc, change);
+  }
+}
+
 class BytebankApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    Bloc.observer = LogObserver();
     return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Color(0xFFFF0019),
-        accentColor: Color(0xFFFF0019),
-        buttonColor: Color(0xFFFF0019),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: Color(0xFFFF0019),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            primary: Color(0xFFFF0019),
-          ),
-        ),
-      ),
+      theme: bytebankTheme,
       home: Dashboard(),
     );
   }
 }
-

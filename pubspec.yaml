@@ -39,6 +39,8 @@ dev_dependencies:
   convert: ^3.0.0
   http_interceptor: ^0.4.1
   uuid: ^3.0.1
+  flutter_bloc: ^7.0.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
