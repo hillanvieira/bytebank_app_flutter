@@ -1,9 +1,19 @@
 import 'package:bytebank_app/components/centered_message.dart';
 import 'package:bytebank_app/components/connection_error.dart';
+import 'package:bytebank_app/components/container.dart';
 import 'package:bytebank_app/components/loading_centered_message.dart';
 import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/transaction.dart';
 import 'package:flutter/material.dart';
+
+
+class TransactionsListContainer extends BlocContainer{
+  @override
+  Widget build(BuildContext context) {
+   return TransactionsList();
+  }
+
+}
 
 class TransactionsList extends StatefulWidget {
   @override

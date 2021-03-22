@@ -1,18 +1,74 @@
+import 'package:bytebank_app/components/container.dart';
 import 'package:bytebank_app/components/loading_centered_message.dart';
 import 'package:bytebank_app/database/dao/contact_dao.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/screens/contact_form.dart';
 import 'package:bytebank_app/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
-import 'package:bytebank_app/screens/dashboard.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactsList extends StatefulWidget {
-  @override
-  _ContactsListState createState() => _ContactsListState();
+@immutable
+abstract class ContactsListState {
+  const ContactsListState();
 }
 
-class _ContactsListState extends State<ContactsList> {
-  final ContactDao _daoContact = new ContactDao();
+@immutable
+class LoadingContactsListState extends ContactsListState {
+  const LoadingContactsListState();
+}
+
+@immutable
+class InitContactsListState extends ContactsListState {
+  const InitContactsListState();
+}
+
+@immutable
+class LoadedContactsListState extends ContactsListState {
+  final List<Contact> _contacts;
+
+  const LoadedContactsListState(this._contacts);
+}
+
+@immutable
+class FatalErrorContactsListState extends ContactsListState {
+  const FatalErrorContactsListState();
+}
+
+class ContactsListCubit extends Cubit<ContactsListState> {
+  ContactsListCubit() : super(InitContactsListState());
+
+  void reload(ContactDao dao) async{
+
+    emit(LoadingContactsListState());
+   // final List<Contact> contacts = await dao.findAll();
+   // emit(LoadedContactsListState(contacts));
+
+    dao.findAll().then((contacts) => emit(LoadedContactsListState(contacts)));
+  }
+}
+
+class ContactsListContainer extends BlocContainer {
+  @override
+  Widget build(BuildContext context) {
+    final ContactDao dao = new ContactDao();
+
+    return BlocProvider<ContactsListCubit>(
+      create: (_) {
+        final ContactsListCubit cubit = new ContactsListCubit();
+        cubit.reload(dao);
+        return cubit;
+       //ContactsListCubit().reload(dao);
+      //return ContactsListCubit();
+      },
+      child: ContactsList(dao),
+    );
+  }
+}
+
+class ContactsList extends StatelessWidget {
+  final ContactDao _dao;
+
+  ContactsList(this._dao);
 
   @override
   Widget build(BuildContext context) {
@@ -20,116 +76,113 @@ class _ContactsListState extends State<ContactsList> {
       appBar: AppBar(
         title: Text('Transfer'),
       ),
-      body: FutureBuilder<List<Contact>>(
-        initialData: [],
-        future: _daoContact.findAll(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              break;
-            case ConnectionState.waiting:
-              return LoadingCenteredMessage();
+      body: BlocBuilder<ContactsListCubit, ContactsListState>(
+        builder: (context, state) {
 
-            case ConnectionState.active:
+          switch (state.runtimeType) {
+            case InitContactsListState:
+            case LoadingContactsListState:
+              return LoadingCenteredMessage();
               break;
-            case ConnectionState.done:
-              final List<Contact> contacts = snapshot.data;
-              return ListView.builder(
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  return _ContactItem(
-                    contact: contacts[index],
-                    updateState: () {
-                      setState(() {});
-                    },
-                    onClick: () {
-                      navigateTo(
-                        context,
-                        TransactionForm(contacts[index]),
-                      );
-                    },
-                  );
-                },
-              );
+            case  LoadedContactsListState:
+              if(state is LoadedContactsListState) {
+                final contacts = state._contacts;
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final contact = contacts[index];
+                    return _ContactItem(
+                      contact,
+                      onClick: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => TransactionFormContainer(contact),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  itemCount: contacts.length,
+                );
+              }
+                break;
           }
 
-          return Text("Unknown error");
+          // if (state is InitContactsListState ||
+          //     state is LoadingContactsListState) {
+          //   return LoadingCenteredMessage();
+          // }
+          // if (state is LoadedContactsListState) {
+          //   final contacts = state._contacts;
+          //   return ListView.builder(
+          //     itemBuilder: (context, index) {
+          //       final contact = contacts[index];
+          //       return _ContactItem(
+          //         contact,
+          //         onClick: () {
+          //           Navigator.of(context).push(
+          //             MaterialPageRoute(
+          //               builder: (context) => TransactionForm(contact),
+          //             ),
+          //           );
+          //         },
+          //       );
+          //     },
+          //     itemCount: contacts.length,
+          //   );
+          // }
+          return const Text('Unknown error');
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return ContactForm();
-              },
-            ),
-          ).then((value) {
-            setState(() {});
-          });
-        },
-        child: Icon(
-          Icons.add,
-        ),
+      floatingActionButton: buildAddContactButton(context),
+    );
+  }
+
+  FloatingActionButton buildAddContactButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ContactForm(),
+          ),
+        );
+        update(context);
+      },
+      child: Icon(
+        Icons.add,
       ),
     );
+  }
+
+  void update(BuildContext context) {
+    context.read<ContactsListCubit>().reload(_dao);
   }
 }
 
 class _ContactItem extends StatelessWidget {
-  final ContactDao _daoContact = new ContactDao();
   final Contact contact;
-  final Function updateState;
   final Function onClick;
 
-  _ContactItem({
-    Key key,
-     this.contact,
-     this.updateState,
-     this.onClick,
-  }) : super(key: key);
+  _ContactItem(
+    this.contact, {
+    @required this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              onTap: () {
-                return onClick();
-              },
-              title: Text(
-                contact.name,
-                style: TextStyle(
-                  fontSize: 24.0,
-                ),
-              ),
-              subtitle: Text(
-                contact.accountNumber.toString(),
-                // "${contact.accountNumber.toString()} ${contact.id.toString()}",
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                  child: const Text('Delete'),
-                  onPressed: () async {
-                    await _daoContact.delete(contact.id);
-                    updateState();
-                  },
-                ),
-                const SizedBox(width: 8),
-                const SizedBox(width: 8),
-              ],
-            ),
-          ],
+    return Card(
+      child: ListTile(
+        onTap: () => onClick(),
+        title: Text(
+          contact.name,
+          style: TextStyle(
+            fontSize: 24.0,
+          ),
+        ),
+        subtitle: Text(
+          contact.accountNumber.toString(),
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
         ),
       ),
     );

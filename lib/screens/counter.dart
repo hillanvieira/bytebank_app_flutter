@@ -1,4 +1,3 @@
-import 'package:bytebank_app/components/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +24,6 @@ class CounterContainer extends StatelessWidget {
 class CounterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final textTheme = bytebankTheme.textTheme;
     return Scaffold(
       appBar: AppBar(
         title: Text("Our count"),

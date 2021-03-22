@@ -1,6 +1,16 @@
+import 'package:bytebank_app/components/container.dart';
 import 'package:bytebank_app/database/dao/contact_dao.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:flutter/material.dart';
+
+
+class ContactFormContainer extends BlocContainer{
+  @override
+  Widget build(BuildContext context) {
+    return ContactForm();
+  }
+
+}
 
 class ContactForm extends StatefulWidget {
   @override
