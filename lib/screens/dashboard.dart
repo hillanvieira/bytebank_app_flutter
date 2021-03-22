@@ -1,4 +1,5 @@
 import 'package:bytebank_app/components/container.dart';
+import 'package:bytebank_app/components/localization.dart';
 import 'package:bytebank_app/models/name.dart';
 import 'package:bytebank_app/screens/contacts_list.dart';
 import 'package:bytebank_app/screens/name.dart';
@@ -17,6 +18,7 @@ class DashboardContainer extends StatelessWidget {
 class DashboardView extends BlocContainer {
   @override
   Widget build(BuildContext context) {
+    final DashboardViewI18N i18n = new DashboardViewI18N(context);
     return Scaffold(
       appBar: AppBar(
         title: BlocBuilder<NameCubit, String>(builder: (context, state) {
@@ -40,21 +42,21 @@ class DashboardView extends BlocContainer {
                 scrollDirection: Axis.horizontal,
                 children: [
                   _FeatureItem(
-                    "Transfer",
+                    i18n.transfer,
                     Icons.monetization_on,
                     onClick: () {
                       navigateTo(context, ContactsListContainer());
                     },
                   ),
                   _FeatureItem(
-                    "Transaction feed",
+                    i18n.transaction_feed,
                     Icons.description,
                     onClick: () {
                       navigateTo(context, TransactionsListContainer());
                     },
                   ),
                   _FeatureItem(
-                    "Change Name",
+                    i18n.change_name,
                     Icons.person,
                     onClick: () {
                       Navigator.of(context).push(
@@ -77,6 +79,25 @@ class DashboardView extends BlocContainer {
     );
   }
 }
+
+
+class DashboardViewI18N extends ViewI18N {
+  DashboardViewI18N(BuildContext context) : super(context);
+
+  String get transfer =>
+      localize({"pt-br": "Transferir", "en": "Transfer"});
+
+  // _ é para constante. defina se você vai usar também para não constante!
+  String get transaction_feed =>
+      localize({"pt-br": "Transações", "en": "Transaction Feed"});
+
+  String get change_name =>
+      localize({"pt-br": "Mudar nome", "en": 'Change name'});
+
+}
+
+
+
 
 class _FeatureItem extends StatelessWidget {
   final String name;
@@ -123,3 +144,4 @@ class _FeatureItem extends StatelessWidget {
     );
   }
 }
+

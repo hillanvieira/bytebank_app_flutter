@@ -43,9 +43,11 @@ class TransactionFormCubit extends Cubit<TransactionFormState> {
 
   final TransactionWebClient _webClient = new TransactionWebClient();
 
-  Future _send(Transaction transactionCreated,
-      String password,
-      BuildContext context,) async {
+  Future _send(
+    Transaction transactionCreated,
+    String password,
+    BuildContext context,
+  ) async {
     /* Future.delayed(Duration(microseconds: 1)).then((value){
       showDialog(
           context: context,
@@ -79,7 +81,6 @@ class TransactionFormCubit extends Cubit<TransactionFormState> {
           });
     }, test: (e) => e is Exception).then((value) async {
       if (value != null) {
-
         emit(SentState());
 
         await showDialog(
@@ -93,7 +94,6 @@ class TransactionFormCubit extends Cubit<TransactionFormState> {
     });
 
     emit(SentState());
-
   }
 }
 
@@ -133,19 +133,17 @@ class TransactionForm extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              BlocBuilder<TransactionFormCubit, TransactionFormState>(
-                  builder: (context, state) {
-                    return  Visibility(
-                      visible: (transactionFormCubit.state is SendingState),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: LoadingCenteredMessage(
-                          message: 'Sending...',
-                        ),
-                      ),
-                    );
-                  }
-              ),
+              BlocBuilder<TransactionFormCubit, TransactionFormState>(builder: (context, state) {
+                return Visibility(
+                  visible: (transactionFormCubit.state is SendingState),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: LoadingCenteredMessage(
+                      message: 'Sending...',
+                    ),
+                  ),
+                );
+              }),
               Text(
                 contact.name,
                 style: TextStyle(
@@ -178,26 +176,23 @@ class TransactionForm extends StatelessWidget {
                   child: ElevatedButton(
                     child: Text('Transfer'),
                     onPressed: () {
-                      final double value =
-                      double.tryParse(_valueController.text);
-                      final transactionCreated =
-                      Transaction(transactionId, value, contact);
+                      final double value = double.tryParse(_valueController.text);
+                      final transactionCreated = Transaction(transactionId, value, contact);
                       showDialog(
                           context: context,
                           builder: (BuildContext contextDialog) {
                             Widget dialog = TransactionAuthDialog(
-                                  onConfirm: (String password) {
-                                 BlocProvider.of<TransactionFormCubit>(context)._send(
-                                        transactionCreated, password, context);
-                                  },
-                                );
+                              onConfirm: (String password) {
+                                BlocProvider.of<TransactionFormCubit>(context)
+                                    ._send(transactionCreated, password, context);
+                              },
+                            );
 
-                              return BlocProvider<TransactionFormCubit>.value(
+                            return BlocProvider<TransactionFormCubit>.value(
                               value: transactionFormCubit, //
                               child: dialog,
                             );
-                          }
-                      );
+                          });
                     },
                   ),
                 ),
