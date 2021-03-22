@@ -4,7 +4,7 @@ A Flutter project.
 
 Projeto que simula uma interface básica de um App para transferências bancárias ,
 projeto utiliza persistência de dados com o uso da lib sqflite do flutter e
-também implementa o uso de uma API REST e comunicação HTTP.
+também implementa o uso de uma API REST,comunicação HTTP e principios de BLOC.
 
 Além de todos os benefícios para criar rapidamente uma interface de usuário que o flutter framework oferece.
 
