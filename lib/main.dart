@@ -22,11 +22,11 @@ print('${bloc.runtimeType} > $change');
 }
 
 class BytebankApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
+    // na prática evitar log do genero, pois pode vazar informações sensíveis para o log
     Bloc.observer = LogObserver();
+
     return MaterialApp(
       theme: bytebankTheme,
       home: LocalizationContainer(

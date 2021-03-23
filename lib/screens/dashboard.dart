@@ -12,9 +12,10 @@ class DashboardContainer extends BlocContainer {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NameCubit(name: 'Guess'),
+      create: (_) => NameCubit(name:'Guess'),
       child: I18NLoadingContainer(
-            (messages) => DashboardView(DashboardViewLazyI18N(messages)),
+        viewKey : "dashboard",
+        creator: (messages) => DashboardView(DashboardViewLazyI18N(messages)),
       ),
     );
   }

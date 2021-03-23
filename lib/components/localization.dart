@@ -2,15 +2,15 @@
 
 import 'package:bytebank_app/components/centered_message.dart';
 import 'package:bytebank_app/components/loading_centered_message.dart';
+import 'package:bytebank_app/http/webclients/i18n_webclient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'container.dart';
 
-
 class LocalizationContainer extends BlocContainer {
   final Widget child;
 
-  LocalizationContainer({@required this.child});
+  LocalizationContainer({@required Widget this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class LoadedI18NMessagesState extends I18NMessagesState {
 }
 
 class I18NMessages {
-  final Map<String, String> _messages;
+  final Map<String, dynamic> _messages;
 
   I18NMessages(this._messages);
 
@@ -88,19 +88,26 @@ class FatalErrorI18NMessagesState extends I18NMessagesState {
 typedef Widget I18NWidgetCreator(I18NMessages messages);
 
 class I18NLoadingContainer extends BlocContainer {
-  final I18NWidgetCreator _creator;
+  I18NWidgetCreator creator;
+  String viewKey;
 
-  I18NLoadingContainer(this._creator);
+  I18NLoadingContainer({
+    @required String viewKey,
+    @required I18NWidgetCreator creator,
+  }) {
+    this.creator = creator;
+    this.viewKey = viewKey;
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<I18NMessagesCubit>(
       create: (BuildContext context) {
         final cubit = I18NMessagesCubit();
-        cubit.reload();
+        cubit.reload(I18NWebClient(this.viewKey));
         return cubit;
       },
-      child: I18NLoadingView(this._creator),
+      child: I18NLoadingView(this.creator),
     );
   }
 }
@@ -114,15 +121,14 @@ class I18NLoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<I18NMessagesCubit, I18NMessagesState>(
       builder: (context, state) {
-        if (state is InitI18NMessagesState ||
-            state is LoadingI18NMessagesState) {
-          return LoadingCenteredMessage();
+        if (state is InitI18NMessagesState || state is LoadingI18NMessagesState) {
+          return Scaffold(body: LoadingCenteredMessage(message: 'Loading'));
         }
         if (state is LoadedI18NMessagesState) {
           final messages = state._messages;
           return _creator.call(messages);
         }
-        return CenteredMessage("Erro buscando mensagens da tela");
+        return Scaffold(body: CenteredMessage("Erro buscando mensagens da tela"));
       },
     );
   }
@@ -131,15 +137,12 @@ class I18NLoadingView extends StatelessWidget {
 class I18NMessagesCubit extends Cubit<I18NMessagesState> {
   I18NMessagesCubit() : super(InitI18NMessagesState());
 
-  reload() {
+  reload(I18NWebClient client) {
     emit(LoadingI18NMessagesState());
-    // TODO carregar assincrono
-    emit(
-      LoadedI18NMessagesState(I18NMessages({
-        "transfer": "TRANSFER",
-        "transaction_feed": "TRANSACTION FEED",
-        "change_name": "CHANGE_NAME",
-      })),
-    );
+    client.findAll().then(
+          (messages) => emit(
+            LoadedI18NMessagesState(I18NMessages(messages)),
+          ),
+        );
   }
 }
