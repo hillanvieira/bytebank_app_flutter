@@ -1,8 +1,6 @@
-import 'package:bytebank_app/components/centered_message.dart';
-import 'package:bytebank_app/components/loading_centered_message.dart';
-import 'package:bytebank_app/components/localization.dart';
+import 'package:bytebank_app/components/localization/locale.dart';
 import 'package:bytebank_app/components/theme.dart';
-import 'package:bytebank_app/screens/dashboard.dart';
+import 'package:bytebank_app/screens/dashboard/dashboard_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
