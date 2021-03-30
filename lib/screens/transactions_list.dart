@@ -4,6 +4,7 @@ import 'package:bytebank_app/components/container.dart';
 import 'package:bytebank_app/components/loading_centered_message.dart';
 import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/transaction.dart';
+import 'package:bytebank_app/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
 
@@ -25,7 +26,8 @@ class _TransactionsListState extends State<TransactionsList> {
 
   @override
   Widget build(BuildContext context) {
-    final TransactionWebClient _webClient = new TransactionWebClient();
+   // final TransactionWebClient _webClient = new TransactionWebClient();
+    final dependencies = AppDependencies.of(context);
 
     //Function that update screen when Scroll at end of the list.
     _onEndScrollAtBorders({ScrollMetrics metrics, DragEndDetails dragDetails}) {
@@ -43,7 +45,7 @@ class _TransactionsListState extends State<TransactionsList> {
       ),
       body: FutureBuilder<List<Transaction>>(
         initialData: [],
-        future: _webClient.findAllHttp().then((transactionsJson) {
+        future: dependencies.transactionWebClient.findAllHttp().then((transactionsJson) {
           return transactionsJson;
         }),
         builder: (context, snapshot) {

@@ -4,6 +4,7 @@ import 'package:bytebank_app/database/dao/contact_dao.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/screens/contact_form.dart';
 import 'package:bytebank_app/screens/transaction_form.dart';
+import 'package:bytebank_app/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,9 +25,9 @@ class InitContactsListState extends ContactsListState {
 
 @immutable
 class LoadedContactsListState extends ContactsListState {
-  final List<Contact> _contacts;
+  final List<Contact> contacts;
 
-  const LoadedContactsListState(this._contacts);
+  const LoadedContactsListState(this.contacts);
 }
 
 @immutable
@@ -40,38 +41,40 @@ class ContactsListCubit extends Cubit<ContactsListState> {
   void reload(ContactDao dao) async{
 
     emit(LoadingContactsListState());
-   // final List<Contact> contacts = await dao.findAll();
-   // emit(LoadedContactsListState(contacts));
+    final List<Contact> contacts = await dao.findAll();
+    emit(LoadedContactsListState(contacts));
 
-    dao.findAll().then((contacts) => emit(LoadedContactsListState(contacts)));
+   // dao.findAll().then((contacts) => emit(LoadedContactsListState(contacts)));
   }
 }
 
 class ContactsListContainer extends BlocContainer {
   @override
   Widget build(BuildContext context) {
-    final ContactDao dao = new ContactDao();
+   // final ContactDao dao = new ContactDao();
+    final dependencies = AppDependencies.of(context);
 
     return BlocProvider<ContactsListCubit>(
       create: (_) {
         final ContactsListCubit cubit = new ContactsListCubit();
-        cubit.reload(dao);
+        cubit.reload(dependencies.contactDao);
         return cubit;
-       //ContactsListCubit().reload(dao);
+       //ContactsListCubit().reload(dependencies.contactDao);
       //return ContactsListCubit();
       },
-      child: ContactsList(dao),
+      child: ContactsList(),
     );
   }
 }
 
 class ContactsList extends StatelessWidget {
-  final ContactDao _dao;
-
-  ContactsList(this._dao);
+  // final ContactDao _dao;
+  //
+  // ContactsList(this._dao);
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Transfer'),
@@ -86,7 +89,7 @@ class ContactsList extends StatelessWidget {
               break;
             case  LoadedContactsListState:
               if(state is LoadedContactsListState) {
-                final contacts = state._contacts;
+                final contacts = state.contacts;
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     final contact = contacts[index];
@@ -133,11 +136,11 @@ class ContactsList extends StatelessWidget {
           return const Text('Unknown error');
         },
       ),
-      floatingActionButton: buildAddContactButton(context),
+      floatingActionButton: buildAddContactButton(context, dependencies.contactDao),
     );
   }
 
-  FloatingActionButton buildAddContactButton(BuildContext context) {
+  FloatingActionButton buildAddContactButton(BuildContext context, ContactDao contactDao) {
     return FloatingActionButton(
       onPressed: () async {
         await Navigator.of(context).push(
@@ -145,7 +148,7 @@ class ContactsList extends StatelessWidget {
             builder: (context) => ContactForm(),
           ),
         );
-        update(context);
+        update(context, contactDao);
       },
       child: Icon(
         Icons.add,
@@ -153,8 +156,8 @@ class ContactsList extends StatelessWidget {
     );
   }
 
-  void update(BuildContext context) {
-    context.read<ContactsListCubit>().reload(_dao);
+  void update(BuildContext context, ContactDao contactDao) {
+    context.read<ContactsListCubit>().reload(contactDao);
   }
 }
 

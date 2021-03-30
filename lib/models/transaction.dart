@@ -9,7 +9,7 @@ class Transaction {
     this.id,
     this.value,
     this.contact,
-  );
+  ) : assert(value > 0);
 
   Transaction.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -26,4 +26,16 @@ class Transaction {
   String toString() {
     return 'Transaction{id: $id, value: $value, contact: $contact}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Transaction &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          value == other.value &&
+          contact == other.contact;
+
+  @override
+  int get hashCode => id.hashCode ^ value.hashCode ^ contact.hashCode;
 }

@@ -1,6 +1,7 @@
 import 'package:bytebank_app/components/container.dart';
 import 'package:bytebank_app/database/dao/contact_dao.dart';
 import 'package:bytebank_app/models/contact.dart';
+import 'package:bytebank_app/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
 
@@ -18,13 +19,14 @@ class ContactForm extends StatefulWidget {
 }
 
 class _ContactFormState extends State<ContactForm> {
-  final ContactDao _daoContact = new ContactDao();
+  //final ContactDao daoContact = new ContactDao();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountNumberController =
       TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('New contact'),
@@ -73,7 +75,7 @@ class _ContactFormState extends State<ContactForm> {
                     );
 
                     setState(() {
-                      _daoContact.save(newContact);
+                      dependencies.contactDao.save(newContact);
                     });
                     Navigator.pop(context);
                   }),
