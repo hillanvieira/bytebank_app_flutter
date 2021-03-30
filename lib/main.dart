@@ -1,3 +1,4 @@
+
 import 'package:bytebank_app/components/localization/locale.dart';
 import 'package:bytebank_app/components/theme.dart';
 import 'package:bytebank_app/screens/dashboard/dashboard_container.dart';
@@ -5,16 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(BytebankApp());
+  runApp(BytebankApp(
+
+  ));
   //print(Uuid().v4());
   //saveHttp(Transaction(235.98, Contact(0, 'Arnaldo', 2300)))
   //    .then((transaction) => print('test post http $transaction'));
 }
 
-class LogObserver extends BlocObserver{
+class LogObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
-print('${bloc.runtimeType} > $change');
+    print('${bloc.runtimeType} > $change');
     super.onChange(bloc, change);
   }
 }

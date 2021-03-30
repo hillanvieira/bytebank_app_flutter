@@ -23,70 +23,77 @@ class DashboardView extends StatelessWidget {
           );
         }),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset("images/bytebank_logo.png"),
-          ),
-          SingleChildScrollView(
-            child: Container(
-              height: 116.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  FeatureItem(
-                    _i18n.transfer,
-                    Icons.monetization_on,
-                    onClick: () {
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset("images/bytebank_logo.png"),
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    height: 116.0,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        FeatureItem(
+                          _i18n.transfer,
+                          Icons.monetization_on,
+                          onClick: () {
 
-                      Navigator
-                          .of(context)
-                          .push(
-                          MaterialPageRoute(
-                              builder: (context) => ContactsListContainer()
-                          )
-                      );
+                            Navigator
+                                .of(context)
+                                .push(
+                                MaterialPageRoute(
+                                    builder: (context) => ContactsListContainer()
+                                )
+                            );
 
-                      // navigateTo(context, ContactsListContainer());
-                    },
-                  ),
-                  FeatureItem(
-                    _i18n.transaction_feed,
-                    Icons.description,
-                    onClick: () {
-                      Navigator
-                          .of(context)
-                          .push(
-                          MaterialPageRoute(
-                              builder: (context) => TransactionsListContainer()
-                          )
-                      );
-                    },
-                  ),
-                  FeatureItem(
-                    _i18n.change_name,
-                    Icons.person,
-                    onClick: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              BlocProvider.value(
-                                //value: BlocProvider.of<NameCubit>(context),
-                                value: context.read<NameCubit>(),
-                                child: NameView(),
-                              ),
+                            // navigateTo(context, ContactsListContainer());
+                          },
                         ),
-                      );
-                    },
+                        FeatureItem(
+                          _i18n.transaction_feed,
+                          Icons.description,
+                          onClick: () {
+                            Navigator
+                                .of(context)
+                                .push(
+                                MaterialPageRoute(
+                                    builder: (context) => TransactionsListContainer()
+                                )
+                            );
+                          },
+                        ),
+                        FeatureItem(
+                          _i18n.change_name,
+                          Icons.person,
+                          onClick: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    BlocProvider.value(
+                                      //value: BlocProvider.of<NameCubit>(context),
+                                      value: context.read<NameCubit>(),
+                                      child: NameView(),
+                                    ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                )
+              ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
