@@ -6,7 +6,7 @@ class Transaction {
   final Contact contact;
 
   Transaction(
-    this.id,
+  this.id,
     this.value,
     this.contact,
   ) : assert(value > 0);

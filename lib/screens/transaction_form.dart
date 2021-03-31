@@ -7,6 +7,7 @@ import 'package:bytebank_app/components/transaction_auth_dialog.dart';
 import 'package:bytebank_app/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_app/models/contact.dart';
 import 'package:bytebank_app/models/transaction.dart';
+import 'package:bytebank_app/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +45,7 @@ class TransactionFormCubit extends Cubit<TransactionFormState> {
   final TransactionWebClient _webClient = new TransactionWebClient();
 
   Future _send(
+      TransactionWebClient webClient,
     Transaction transactionCreated,
     String password,
     BuildContext context,
@@ -59,13 +61,14 @@ class TransactionFormCubit extends Cubit<TransactionFormState> {
 
     emit(SendingState());
 
-    final transaction = _webClient.saveHttp(transactionCreated, password);
+   // final transaction = _webClient.saveHttp(transactionCreated, password);
+    final transaction = webClient.saveHttp(transactionCreated, password);
 
-    await transaction.catchError((e) {
+   await transaction.catchError((e) {
       showDialog(
           context: context,
           builder: (contextDialog) {
-            return FailureDialog('Timeout submitting the  transaction');
+            return FailureDialog('Timeout submitting the transaction');
           });
     }, test: (e) => e is TimeoutException).catchError((e) {
       showDialog(
@@ -121,6 +124,9 @@ class TransactionForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final dependencies = AppDependencies.of(context);
+
     print("transaction form ID: $transactionId");
     TransactionFormCubit transactionFormCubit = BlocProvider.of<TransactionFormCubit>(context);
     return Scaffold(
@@ -177,14 +183,14 @@ class TransactionForm extends StatelessWidget {
                     child: Text('Transfer'),
                     onPressed: () {
                       final double value = double.tryParse(_valueController.text);
-                      final transactionCreated = Transaction(transactionId, value, contact);
+                      final transactionCreated = Transaction(transactionId,value,contact);
                       showDialog(
                           context: context,
                           builder: (BuildContext contextDialog) {
                             Widget dialog = TransactionAuthDialog(
                               onConfirm: (String password) {
                                 BlocProvider.of<TransactionFormCubit>(context)
-                                    ._send(transactionCreated, password, context);
+                                    ._send(dependencies.transactionWebClient, transactionCreated, password, context);
                               },
                             );
 

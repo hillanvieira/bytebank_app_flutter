@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+const Key transactionAuthDialogTextFieldPasswordKey =
+Key('transactionAuthDialogTextFieldPassword');
 
 class TransactionAuthDialog extends StatefulWidget {
   final Function(String password) onConfirm;
@@ -18,6 +22,7 @@ class _TransactionAuthDialogState extends State<TransactionAuthDialog> {
     return AlertDialog(
       title: Text('Authenticate'),
       content: TextField(
+        key: transactionAuthDialogTextFieldPasswordKey,
         controller: _passwordController,
         decoration: InputDecoration(
             border: OutlineInputBorder(borderSide: BorderSide())),
