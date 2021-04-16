@@ -1,17 +1,26 @@
-# bytebank_app
+## Bytebank App
 
-A Flutter project.
+Simulação de um aplicativo de banco digital com fins de aprendizado de técnicas básicas e avançadas com o Flutter framework.
 
-Projeto que simula uma interface básica de um App para transferências bancárias ,
-projeto utiliza persistência de dados com o uso da lib sqflite do flutter e
-também implementa o uso de uma API REST,comunicação HTTP e principios de BLOC.
+## Tecnologias
 
-Além de todos os benefícios para criar rapidamente uma interface de usuário que o flutter framework oferece.
+* Dart
+* Flutter
 
-Aplicação focada em utilizar as vantagens de uma linguagem orientada a objetos.
 
-Muitas implementações de tarefas assíncronas.
+## Getting started
 
-projeto organizado num pattern bem interessante para desenvolvimento em flutter.
+* caso tenham o interesse de rodar a aplicacao a maneira mais simples é abrir o projeto na IDE IntelliJ IDEA
 
-Esse app é uma proposta da Alura junto a NuBank para a criação de um curso, mas aqui eu dei meus toques e adicionei novas features que eu acho interessante e muita coisa eu vou transformar em uma biblioteca para acelerar ainda mais o desenvolvimento de aplicações multiplataformas utilizando o flutter.
+* também é necessário roda uma WEB-API para a funcionalidade total da aplicação, disponivel nesse link https://github.com/alura-cursos/bytebank-api
+
+## Técnicas aplicadas
+* Fundamentos de Flutter
+* Persistência de dados (sqflite)
+* Integração com Web API (REST)
+* Gerenciamento de Estados com BLoC
+* Gerenciamento de Internacionalização i18N
+* Testes de unidade e Widget com mocks
+* Conceitos de boas praticas de programação com Flutter
+
+
